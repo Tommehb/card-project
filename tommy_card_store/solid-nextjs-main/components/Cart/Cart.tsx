@@ -4,19 +4,44 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+const items = [
+  {
+    id: 1,
+    name: "Example Item 1",
+    price: 49.99,
+    image: "/images/blog/basketball/1.jpg",
+    pickupLocation: "Store Name 1",
+  },
+  {
+    id: 2,
+    name: "Example Item 2",
+    price: 59.99,
+    image: "/images/blog/basketball/1.jpg",
+    pickupLocation: "Store Name 2",
+  },
+  {
+    id: 3,
+    name: "Example Item 3",
+    price: 59.99,
+    image: "/images/blog/basketball/1.jpg",
+    pickupLocation: "Store Name 3",
+  },
+  // Add more items as needed
+];
+
 const Cart = () => {
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  // const [data, setData] = useState({
+  //   email: "",
+  //   password: "",
+  // });
 
   return (
     <>
-      {/* <!-- ===== SignIn Form Start ===== --> */}
+      {/* <!-- ===== Order Form Start ===== --> */}
       <section className="pb-12.5 pt-32.5 lg:pb-25 lg:pt-45 xl:pb-30 xl:pt-50">
-        <div className="relative z-1 mx-auto max-w-c-1016 px-7.5 pb-7.5 pt-10 lg:px-15 lg:pt-15 xl:px-20 xl:pt-20">
-          <div className="absolute left-0 top-0 -z-1 h-2/3 w-full rounded-lg bg-gradient-to-t from-transparent to-[#dee7ff47] dark:bg-gradient-to-t dark:to-[#252A42]"></div>
-          <div className="absolute bottom-17.5 left-0 -z-1 h-1/3 w-full">
+        <div className="relative z-1 mx-auto max-w-c-1216 px-7.5 pb-7.5 pt-10 lg:px-15 lg:pt-15 xl:px-20 xl:pt-20 flex">
+          <div className="absolute left-0 top-0 -z-1 h-2/3 w-[140%] -ml-[20%] rounded-lg bg-gradient-to-t from-transparent to-[#dee7ff47] dark:bg-gradient-to-t dark:to-[#252A42]"></div>
+          {/* <div className="absolute bottom-17.5 left-0 -z-1 h-1/3 w-full">
             <Image
               src="/images/shape/shape-dotted-light.svg"
               alt="Dotted"
@@ -29,7 +54,7 @@ const Cart = () => {
               className="hidden dark:block"
               fill
             />
-          </div>
+          </div> */}
 
           <motion.div
             variants={{
@@ -60,7 +85,7 @@ const Cart = () => {
 
             <form>
               <div className="mb-7.5 flex flex-col gap-7.5 lg:mb-12.5 lg:flex-row lg:justify-between lg:gap-14">
-                <input
+                {/* <input
                   type="text"
                   placeholder="Email"
                   name="email"
@@ -78,18 +103,48 @@ const Cart = () => {
                     setData({ ...data, password: e.target.value })
                   }
                   className="w-full border-b border-stroke !bg-white pb-3.5 focus:border-waterloo focus:placeholder:text-black focus-visible:outline-none dark:border-strokedark dark:!bg-black dark:focus:border-manatee dark:focus:placeholder:text-white lg:w-1/2"
-                />
+                /> */}
               </div>
 
               <div className="flex flex-wrap items-center gap-10 md:justify-between xl:gap-15">
                 <div className="flex flex-wrap gap-4 md:gap-10">
-                  <div className="mb-4 flex items-center">
-                    <input
+                  <div className="mb-4 items-center">
+                    {/* <input
                       id="default-checkbox"
                       type="checkbox"
                       className="peer sr-only"
-                    />
-                    <span className="border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 group mt-1 flex h-5 min-w-[20px] items-center justify-center rounded peer-checked:bg-primary">
+                    /> */}
+                    {items.map((item) => (
+          <div key={item.id} className="bg-white rounded-lg shadow-lg p-5 mb-5 flex">
+            <img src={item.image} alt="Product Image" className="w-24 h-32 object-cover rounded-lg mr-5" />
+            <div>
+              <h3 className="text-xl font-semibold mb-5">{item.name}</h3>
+              <div className="flex justify-between items-center mb-4">
+                <span>Price: ${item.price.toFixed(2)}</span>
+                <div className="flex items-center">
+                  <label htmlFor={`quantity-${item.id}`} className="mr-2">Quantity:</label>
+                  <select id={`quantity-${item.id}`} name="quantity" className="border rounded p-1">
+                    {[...Array(10).keys()].map((i) => (
+                      <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    ))}
+                  </select>
+                  <button
+                    aria-label="remove item"
+                    className="inline-flex items-center gap-2.5 rounded-full bg-black px-4 py-1 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho ml-2"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center">
+                <span className="mr-2">Pickup at:</span>
+                <span className="bg-gray-200 text-gray-700 rounded-full px-3 py-1">{item.pickupLocation}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+
+                    {/* <span className="border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 group mt-1 flex h-5 min-w-[20px] items-center justify-center rounded peer-checked:bg-primary">
                       <svg
                         className="opacity-0 peer-checked:group-[]:opacity-100"
                         width="10"
@@ -105,21 +160,21 @@ const Cart = () => {
                           fill="white"
                         />
                       </svg>
-                    </span>
-                    <label
+                    </span> */}
+                    {/* <label
                       htmlFor="default-checkbox"
                       className="flex max-w-[425px] cursor-pointer select-none pl-3"
                     >
                       Keep me signed in
-                    </label>
+                    </label> */}
                   </div>
 
-                  <a href="#" className="hover:text-primary">
+                  {/* <a href="#" className="hover:text-primary">
                     Forgot Password?
-                  </a>
+                  </a> */}
                 </div>
 
-                <button
+                {/* <button
                   aria-label="login with email and password"
                   className="inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho"
                 >
@@ -137,10 +192,10 @@ const Cart = () => {
                       fill=""
                     />
                   </svg>
-                </button>
+                </button> */}
               </div>
 
-              <div className="mt-12.5 border-t border-stroke py-5 text-center dark:border-strokedark">
+              {/* <div className="mt-12.5 border-t border-stroke py-5 text-center dark:border-strokedark">
                 <p>
                   Don't have an account?{" "}
                   <Link
@@ -150,10 +205,58 @@ const Cart = () => {
                     Sign Up
                   </Link>
                 </p>
-              </div>
+              </div> */}
             </form>
           </motion.div>
+          <div className="flex-1 lg:ml-10 mt-10 lg:mt-0">
+    <div className="bg-white rounded-lg shadow-lg p-5">
+      <h3 className="text-xl font-semibold mb-5">Order Summary</h3>
+      <div className="mb-5">
+      <div className="flex justify-between mb-2">
+        <span>Original Price</span>
+        <span>$99.99</span>
+      </div>
+      <div className="flex justify-between mb-2">
+        <span>Savings</span>
+        <span>-$20.00</span>
+      </div>
+      <div className="flex justify-between mb-2">
+        <span>Store Pickup</span>
+        <span>FREE</span>
+      </div>
+      <div className="flex justify-between mb-2">
+        <span>Estimated Sales Tax</span>
+        <span>Calculated in checkout</span>
+      </div>
+      <div className="flex justify-between font-semibold">
+        <span>Total</span>
+        <span>$79.99</span>
+      </div>
+    </div>
+      {
+        <button
+        className="inline-flex w-full text-center items-center justify-center gap-2.5 rounded-full bg-black px-6 py-3 font-medium text-white duration-300 ease-in-out hover:bg-blackho dark:bg-btndark dark:hover:bg-blackho"
+      >
+        Checkout
+        {/* <svg
+          className="fill-white"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10.4767 6.16664L6.00668 1.69664L7.18501 0.518311L13.6667 6.99998L7.18501 13.4816L6.00668 12.3033L10.4767 7.83331H0.333344V6.16664H10.4767Z"
+            fill=""
+          />
+        </svg> */}
+      </button>
+      }
+    </div>
+  </div>
         </div>
+
       </section>
       {/* <!-- ===== SignIn Form End ===== --> */}
     </>
