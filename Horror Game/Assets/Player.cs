@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 5f; // Force applied when the player jumps
     public Camera playerCamera; // Reference to the player's camera
     public float cameraRotationSpeed = 2f; // Speed of camera rotation
+    public GameHandler gameHandler; // Reference to the GameHandler script
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -64,6 +65,15 @@ public class Player : MonoBehaviour
         if (transform.position.y < 0f) // Assuming 0f is the height of the floor
         {
             transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Key"))
+        {
+            gameHandler.KeyFound(); // Call the KeyFound method in GameHandler
+            Destroy(collision.gameObject); // Destroy the key GameObject
         }
     }
 }
