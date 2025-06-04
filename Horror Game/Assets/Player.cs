@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
         Vector3 cameraRotation = playerCamera.transform.eulerAngles;
         cameraRotation.x -= mouseY * cameraRotationSpeed; // Rotate up and down
         cameraRotation.y += mouseX * cameraRotationSpeed; // Rotate left and right
-        cameraRotation.x = Mathf.Clamp(cameraRotation.x, -90f, 90f); // Clamp vertical rotation to prevent flipping
+        // cameraRotation.x = Mathf.Clamp(cameraRotation.x, -90f, 90f); // Clamp vertical rotation to prevent flipping
         // Apply the rotation to the camera
         // and the player object
         playerCamera.transform.eulerAngles = cameraRotation;

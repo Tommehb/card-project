@@ -100,6 +100,12 @@ public class RedMannequin : MonoBehaviour
             if (IsPlayerInView())
             {
                 MoveTowardsPlayer();
+                // rotate about the y axis to face the player
+                Vector3 direction = (player.position - transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                lookRotation.x = 0; // Keep the rotation only on the y-axis
+                lookRotation.z = 0; // Keep the rotation only on the y-axis
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * speed);
             }
             else
             {
