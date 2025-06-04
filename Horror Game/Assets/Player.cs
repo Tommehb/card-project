@@ -76,4 +76,12 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject); // Destroy the key GameObject
         }
     }
+
+    // Death function
+    public void Die()
+    {
+        // Handle player death (e.g., respawn, game over, etc.)
+        Debug.Log("Player has died.");
+        // You can add more logic here, such as restarting the level or showing a game over screen
+    }
 }
