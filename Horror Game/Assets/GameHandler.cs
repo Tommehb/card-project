@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 public class GameHandler : MonoBehaviour
 {
     public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component
@@ -101,5 +102,15 @@ public class GameHandler : MonoBehaviour
         {
             safeZone.enabled = true; // Enable the safe zone collider
         }
+    }
+
+    public void RestartGame() // Method to restart the game
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
+    }
+
+    public void ExitToTitle() // Method to exit to the title screen
+    {
+        SceneManager.LoadScene("Home"); // Load the title screen scene
     }
 }

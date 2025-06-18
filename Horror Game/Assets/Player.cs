@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public Camera playerCamera; // Reference to the player's camera
     public float cameraRotationSpeed = 2f; // Speed of camera rotation
     public GameHandler gameHandler; // Reference to the GameHandler script
+    public jumpscare jumpscareHandler; // Reference to the jumpscare script
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -83,5 +84,6 @@ public class Player : MonoBehaviour
         // Handle player death (e.g., respawn, game over, etc.)
         Debug.Log("Player has died.");
         // You can add more logic here, such as restarting the level or showing a game over screen
+        jumpscareHandler.TriggerJumpscare(); // Trigger the jumpscare
     }
 }

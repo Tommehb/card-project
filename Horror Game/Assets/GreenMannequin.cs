@@ -83,4 +83,21 @@ public class GreenMannequin : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * speed);
         }
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // Handle collision with the player
+            Debug.Log("Green Mannequin collided with the player!");
+
+            //call the Die function in Player
+            Player playerScript = other.GetComponent<Player>();
+            if (playerScript != null)
+            {
+                playerScript.Die(); // Call the Die function in Player
+            }
+        }
+    }
 }
