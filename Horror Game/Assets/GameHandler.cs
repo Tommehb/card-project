@@ -6,9 +6,13 @@ public class GameHandler : MonoBehaviour
 {
     public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component
     public int keysFound = 0; // Number of keys found
-    public int totalKeys = 0; // Total number of keys to find
+    public int totalKeys = 5; // Total number of keys to find
 
     public List<GameObject> keys; // List of key GameObjects
+    public List<GameObject> blinkMannequins; // List of blink mannequins
+    public List<GameObject> hideMannequins; // List of blink mannequins
+    public List<GameObject> chaseMannequins; // List of chase mannequins
+
     public List<Transform> spawnPoints; // List of spawn points for the keys
 
     public BoxCollider safeZone; // Reference to the safe zone collider
@@ -82,6 +86,8 @@ public class GameHandler : MonoBehaviour
                 }
             }
             safeZone.enabled = false; // Disable the safe zone collider
+
+            SetupMannequins(); // Call the method to set up mannequins
         }
     }
 
@@ -101,6 +107,75 @@ public class GameHandler : MonoBehaviour
         if (keysFound >= totalKeys) // Check if all keys have been found
         {
             safeZone.enabled = true; // Enable the safe zone collider
+        }
+    }
+
+    void SetupMannequins()
+    {
+        // Disable all the mannequins initially
+        foreach (GameObject mannequin in blinkMannequins)
+        {
+            mannequin.SetActive(false); // Disable the blink mannequins
+        }
+        foreach (GameObject mannequin in hideMannequins)
+        {
+            mannequin.SetActive(false); // Disable the hide mannequins
+        }
+        foreach (GameObject mannequin in chaseMannequins)
+        {
+            mannequin.SetActive(false); // Disable the chase mannequins
+        }
+
+        if (GameManager.instance.level == 1) { // 2 of each
+            for (int i = 0; i < 2; i++)
+            {
+                if (i < blinkMannequins.Count)
+                {
+                    blinkMannequins[i].SetActive(true); // Enable the blink mannequin
+                }
+                if (i < hideMannequins.Count)
+                {
+                    hideMannequins[i].SetActive(true); // Enable the hide mannequin
+                }
+                if (i < chaseMannequins.Count)
+                {
+                    chaseMannequins[i].SetActive(true); // Enable the chase mannequin
+                }
+            }
+        } else if (GameManager.instance.level == 2) { // 4 of each
+            for (int i = 0; i < 4; i++)
+            {
+                if (i < blinkMannequins.Count)
+                {
+                    blinkMannequins[i].SetActive(true); // Enable the blink mannequin
+                }
+                if (i < hideMannequins.Count)
+                {
+                    hideMannequins[i].SetActive(true); // Enable the hide mannequin
+                }
+                if (i < chaseMannequins.Count)
+                {
+                    chaseMannequins[i].SetActive(true); // Enable the chase mannequin
+                }
+            }
+        } else if (GameManager.instance.level == 3) { // 6 of each
+            for (int i = 0; i < 6; i++)
+            {
+                if (i < blinkMannequins.Count)
+                {
+                    blinkMannequins[i].SetActive(true); // Enable the blink mannequin
+                }
+                if (i < hideMannequins.Count)
+                {
+                    hideMannequins[i].SetActive(true); // Enable the hide mannequin
+                }
+                if (i < chaseMannequins.Count)
+                {
+                    chaseMannequins[i].SetActive(true); // Enable the chase mannequin
+                }
+            }
+        } else {
+            Debug.LogWarning("Invalid level set in GameManager.instance.level");
         }
     }
 
