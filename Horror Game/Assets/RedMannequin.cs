@@ -130,7 +130,7 @@ public class RedMannequin : MonoBehaviour
             Player playerScript = other.GetComponent<Player>();
             if (playerScript != null)
             {
-                playerScript.Die(); // Call the Die function in Player
+                playerScript.Die("Chase"); // Call the Die function in Player
             }
         }
     }

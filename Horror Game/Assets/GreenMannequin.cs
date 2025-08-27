@@ -96,7 +96,7 @@ public class GreenMannequin : MonoBehaviour
             Player playerScript = other.GetComponent<Player>();
             if (playerScript != null)
             {
-                playerScript.Die(); // Call the Die function in Player
+                playerScript.Die("Hide"); // Call the Die function in Player
             }
         }
     }

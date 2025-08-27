@@ -10,12 +10,35 @@ public class jumpscare : MonoBehaviour
     public float displayDuration = 2f; // Duration to display the jumpscare image
     private float timer = 0f; // Timer to track the display duration
     private bool isJumpscareActive = false; // Flag to indicate if the jumpscare
+    float imageYPosition = 216.5f; // Y position for the jumpscare image
+
+    void Shake()
+    {
+        // vibrate the jumpscare image
+        jumpscareImage.transform.localPosition = new Vector3(
+            Random.Range(-15f, 15f),
+            Random.Range(-15f, 15f) - 350f,
+            jumpscareImage.transform.localPosition.z
+        );
+
+        // Reset the position after shaking
+        Invoke("ResetPosition", 0.01f);
+    }
+
+    void ResetPosition()
+    {
+        jumpscareImage.transform.localPosition = new Vector3(0, imageYPosition, jumpscareImage.transform.localPosition.z);
+
+        // Call Shake again to continue shaking
+        Shake();
+    }
+
     public void TriggerJumpscare()
     {
         if (!isJumpscareActive)
         {
             // set parent active
-            jumpscareParent.SetActive(true);
+            jumpscareImage.transform.parent.gameObject.SetActive(true);
 
             jumpscareImage.enabled = true; // Show the jumpscare image
             jumpscareSound.Play(); // Play the jumpscare sound
@@ -24,6 +47,8 @@ public class jumpscare : MonoBehaviour
 
             // shake the camera
             Camera.main.GetComponent<CameraShake>().Shake(0.5f, 0.5f);
+
+            Shake(); // Call the shake method to vibrate the jumpscare parent
 
             Invoke("HideJumpscare", displayDuration); // Schedule hiding the jumpscare after the display duration
         }
@@ -40,7 +65,8 @@ public class jumpscare : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        imageYPosition = jumpscareImage.transform.localPosition.y;
+        Debug.Log("Jumpscare script initialized. Image Y Position: " + imageYPosition);
     }
 
     // Update is called once per frame

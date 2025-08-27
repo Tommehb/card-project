@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool isAlive = true; // Player's alive status
     public float walkSpeed = 5f; // Speed of the player when walking
     public float runSpeed = 10f; // Speed of the player when running
     public float jumpForce = 5f; // Force applied when the player jumps
@@ -79,11 +80,18 @@ public class Player : MonoBehaviour
     }
 
     // Death function
-    public void Die()
+    public void Die(string reason)
     {
+        if (!isAlive) return; // Prevent multiple deaths
         // Handle player death (e.g., respawn, game over, etc.)
-        Debug.Log("Player has died.");
+        Debug.Log("Player has died: " + reason);
         // You can add more logic here, such as restarting the level or showing a game over screen
         jumpscareHandler.TriggerJumpscare(); // Trigger the jumpscare
+
+        // emit death event
+        float timeSurvived = Time.time - gameHandler.startTime; // Calculate time survived
+        gameHandler.PlayerDied(timeSurvived, reason); // Notify GameManager of player death
+
+        isAlive = false; // Mark player as dead
     }
 }

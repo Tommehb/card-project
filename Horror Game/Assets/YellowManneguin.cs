@@ -76,7 +76,7 @@ public class YellowManneguin : MonoBehaviour
             Player playerScript = other.GetComponent<Player>();
             if (playerScript != null)
             {
-                playerScript.Die(); // Call the Die function in Player
+                playerScript.Die("Blink"); // Call the Die function in Player
             }
         }
     }

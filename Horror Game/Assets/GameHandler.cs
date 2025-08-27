@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameHandler : MonoBehaviour
 {
     public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component
+    public TextMeshProUGUI timeText; // Reference to the TextMeshProUGUI component for time display
+    public TextMeshProUGUI reasonText;
     public int keysFound = 0; // Number of keys found
     public int totalKeys = 5; // Total number of keys to find
 
@@ -17,9 +19,13 @@ public class GameHandler : MonoBehaviour
 
     public BoxCollider safeZone; // Reference to the safe zone collider
 
+    // start time
+    public float startTime;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        startTime = Time.time; // Record the start time
         if (GameManager.instance != null) {
             switch (GameManager.instance.level)
             {
@@ -187,5 +193,14 @@ public class GameHandler : MonoBehaviour
     public void ExitToTitle() // Method to exit to the title screen
     {
         SceneManager.LoadScene("Home"); // Load the title screen scene
+    }
+
+    public void PlayerDied(float timeSurvived, string reason)
+    {
+        Debug.Log("Player died after surviving for " + timeSurvived + " seconds. Reason: " + reason);
+        // You can add more logic here, such as recording stats or updating a leaderboard
+
+        timeText.text = "Time Survived: " + timeSurvived.ToString("F2") + " seconds";
+        reasonText.text = "And got attacked by a: " + reason + " mannequin";
     }
 }
