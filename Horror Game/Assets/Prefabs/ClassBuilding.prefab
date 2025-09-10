@@ -378,6 +378,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Classroom1
       objectReference: {fileID: 0}
+    - target: {fileID: 6100331923213662317, guid: 0b0b29045a124429e9b3347819c13e64, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8773344555496667065, guid: 0b0b29045a124429e9b3347819c13e64, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.48000002

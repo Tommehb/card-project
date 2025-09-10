@@ -7,14 +7,18 @@ public class Player : MonoBehaviour
     public float runSpeed = 10f; // Speed of the player when running
     public float jumpForce = 5f; // Force applied when the player jumps
     public Camera playerCamera; // Reference to the player's camera
-    public float cameraRotationSpeed = 2f; // Speed of camera rotation
+    public float cameraRotationSpeed = 5f; // Speed of camera rotation
     public GameHandler gameHandler; // Reference to the GameHandler script
     public jumpscare jumpscareHandler; // Reference to the jumpscare script
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // Check mouse sensitivity from GameManager
+        if (GameManager.instance != null)
+        {
+            cameraRotationSpeed = GameManager.instance.mouseSensitivity; // Set camera rotation speed based on mouse sensitivity
+        }
     }
 
     // Update is called once per frame

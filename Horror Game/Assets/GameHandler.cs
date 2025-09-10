@@ -25,6 +25,10 @@ public class GameHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Hide the cursor and lock it to the center of the screen
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         startTime = Time.time; // Record the start time
         if (GameManager.instance != null) {
             switch (GameManager.instance.level)
@@ -202,5 +206,9 @@ public class GameHandler : MonoBehaviour
 
         timeText.text = "Time Survived: " + timeSurvived.ToString("F2") + " seconds";
         reasonText.text = "And got attacked by a: " + reason + " mannequin";
+
+        // Unlock and show the cursor for the death screen
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
