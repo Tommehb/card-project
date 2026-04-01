@@ -191,11 +191,26 @@ public class GameHandler : MonoBehaviour
 
     public void RestartGame() // Method to restart the game
     {
+        if (LanSessionManager.Instance != null && LanSessionManager.Instance.IsSessionActive)
+        {
+            if (!LanSessionManager.Instance.RestartCurrentNetworkScene())
+            {
+                Debug.LogWarning("Only the host can restart a LAN scene.");
+            }
+            return;
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene
     }
 
     public void ExitToTitle() // Method to exit to the title screen
     {
+        if (LanSessionManager.Instance != null && LanSessionManager.Instance.IsSessionActive)
+        {
+            LanSessionManager.Instance.ShutdownAndReturnToMenu();
+            return;
+        }
+
         SceneManager.LoadScene("Home"); // Load the title screen scene
     }
 

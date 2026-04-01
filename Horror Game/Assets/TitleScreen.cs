@@ -29,6 +29,10 @@ public class TitleScreen : MonoBehaviour
         Debug.Log("Game is exiting");
     }
 
-    
+    public void StartMultiplayer()
+    {
+        // Load the multiplayer scene
+        SceneManager.LoadScene("MultiplayTest");
+    }
 
 }
