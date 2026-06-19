@@ -20,11 +20,19 @@ public class RedMannequin : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get the Rigidbody component
+
+        // Resolve the player at runtime (prefab refs can't point at a scene object)
+        if (player == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) player = p.transform;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (player == null) return;
         // Call the function to update the mannequin's behavior
         UpdateBehavior();
     }

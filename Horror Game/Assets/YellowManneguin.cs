@@ -11,8 +11,9 @@ public class YellowManneguin : MonoBehaviour
     // function to check if the player is looking at the mannequin (within the viewport)
     public bool IsLookingAtMannequin()
     {
+        if (playerCamera == null) return false;
         Vector3 screenPoint = playerCamera.WorldToViewportPoint(transform.position);
-        return screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1;
+        return screenPoint.z > 0 && screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1;
     }
 
     private void MoveTowardsPlayer()
@@ -36,11 +37,20 @@ public class YellowManneguin : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get the Rigidbody component
+
+        // Resolve the player + camera at runtime (prefab refs can't point at a scene object)
+        if (player == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) player = p.transform;
+        }
+        if (playerCamera == null) playerCamera = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (player == null || playerCamera == null) return;
         // Debug.Log("Is looking at mannequin: " + IsLookingAtMannequin());
 
         // If not being looked at, move towards player

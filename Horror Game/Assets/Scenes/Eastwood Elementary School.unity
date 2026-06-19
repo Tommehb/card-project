@@ -14,17 +14,17 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.2, g: 0.19, b: 0.26, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.05
+  m_FogDensity: 0.012
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.81
-  m_AmbientMode: 3
+  m_AmbientSkyColor: {r: 0.16, g: 0.2, b: 0.32, a: 1}
+  m_AmbientEquatorColor: {r: 0.32, g: 0.26, b: 0.24, a: 1}
+  m_AmbientGroundColor: {r: 0.07, g: 0.06, b: 0.05, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 3876d0e183013044aab5adba683217d7, type: 2}
   m_HaloStrength: 0.5
@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 694474220}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3016,6 +3016,8 @@ MonoBehaviour:
   - {fileID: 2053442819}
   - {fileID: 1596141762}
   safeZone: {fileID: 924966308}
+  winUI: {fileID: 0}
+  ambientClip: {fileID: 0}
   startTime: 0
 --- !u!1 &558487933
 GameObject:
@@ -4045,7 +4047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &694474219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4085,8 +4087,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.78, b: 0.55, a: 1}
+  m_Intensity: 0.6
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4148,13 +4150,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694474218}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.100967, y: -0.257402, z: 0.027054, w: 0.960637}
   m_LocalPosition: {x: 16.336632, y: -43.046513, z: -9.804893}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 12, y: -30, z: 0}
 --- !u!1001 &702621726
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6421,7 +6423,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924966307}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6439,7 +6441,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: b7a8d41e669e24c1198e4305383729e8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15457,6 +15459,14 @@ PrefabInstance:
     - target: {fileID: -7251877492974426361, guid: 8ba75dc63e0614d18ac169b4bd4469d1, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 751247671
+      objectReference: {fileID: 0}
+    - target: {fileID: -7251877492974426361, guid: 8ba75dc63e0614d18ac169b4bd4469d1, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7251877492974426361, guid: 8ba75dc63e0614d18ac169b4bd4469d1, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 1286058725
       objectReference: {fileID: 0}
     - target: {fileID: 5315875991678916370, guid: 8ba75dc63e0614d18ac169b4bd4469d1, type: 3}
       propertyPath: m_Name

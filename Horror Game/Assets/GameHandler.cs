@@ -18,6 +18,8 @@ public class GameHandler : MonoBehaviour
     public List<Transform> spawnPoints; // List of spawn points for the keys
 
     public BoxCollider safeZone; // Reference to the safe zone collider
+    public GameObject winUI; // Optional UI panel shown when the player escapes
+    public AudioClip ambientClip; // Optional ambient soundscape (else auto-loaded from Resources)
 
     // start time
     public float startTime;
@@ -25,6 +27,8 @@ public class GameHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        EnsureSupportSystems(); // Auto-create the logger / safe-zone trigger / ambience so no manual wiring is needed
+
         // Hide the cursor and lock it to the center of the screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -122,6 +126,8 @@ public class GameHandler : MonoBehaviour
 
     void SetupMannequins()
     {
+        AutoCollectMannequins(); // Populate the lists from the scene if left empty in the Inspector
+
         // Disable all the mannequins initially
         foreach (GameObject mannequin in blinkMannequins)
         {
@@ -189,6 +195,62 @@ public class GameHandler : MonoBehaviour
         }
     }
 
+    // Create the telemetry logger, safe-zone win trigger, and ambient/tension audio at
+    // runtime if they aren't already present, so the scene needs no manual wiring.
+    void EnsureSupportSystems()
+    {
+        // Post-run behavior logger
+        if (FindAnyObjectByType<PlayerBehaviorLogger>() == null)
+            gameObject.AddComponent<PlayerBehaviorLogger>();
+
+        // Safe-zone escape/win trigger on the existing SafeZone object
+        if (safeZone != null && safeZone.GetComponent<SafeZoneTrigger>() == null)
+        {
+            SafeZoneTrigger trigger = safeZone.gameObject.AddComponent<SafeZoneTrigger>();
+            trigger.gameHandler = this;
+        }
+
+        // Ambient soundscape + rising tension
+        if (FindAnyObjectByType<TensionDirector>() == null)
+        {
+            AudioClip clip = ambientClip != null
+                ? ambientClip
+                : Resources.Load<AudioClip>("dark-horror-soundscape-345814");
+
+            GameObject ambienceGO = new GameObject("Ambience (auto)");
+            AudioSource source = ambienceGO.AddComponent<AudioSource>();
+            source.loop = true;
+            source.playOnAwake = false;
+            source.spatialBlend = 0f; // 2D
+            source.clip = clip;
+
+            TensionDirector director = ambienceGO.AddComponent<TensionDirector>();
+            director.ambient = source;
+            director.soundscape = clip;
+        }
+    }
+
+    // If the mannequin lists were left empty in the Inspector, discover the placed
+    // mannequin instances in the scene by their behavior script so level scaling works.
+    void AutoCollectMannequins()
+    {
+        if (chaseMannequins == null) chaseMannequins = new List<GameObject>();
+        if (blinkMannequins == null) blinkMannequins = new List<GameObject>();
+        if (hideMannequins == null) hideMannequins = new List<GameObject>();
+
+        if (chaseMannequins.Count == 0)
+            foreach (RedMannequin m in FindObjectsByType<RedMannequin>(FindObjectsInactive.Include))
+                chaseMannequins.Add(m.gameObject);
+
+        if (blinkMannequins.Count == 0)
+            foreach (YellowManneguin m in FindObjectsByType<YellowManneguin>(FindObjectsInactive.Include))
+                blinkMannequins.Add(m.gameObject);
+
+        if (hideMannequins.Count == 0)
+            foreach (GreenMannequin m in FindObjectsByType<GreenMannequin>(FindObjectsInactive.Include))
+                hideMannequins.Add(m.gameObject);
+    }
+
     public void RestartGame() // Method to restart the game
     {
         if (LanSessionManager.Instance != null && LanSessionManager.Instance.IsSessionActive)
@@ -225,5 +287,34 @@ public class GameHandler : MonoBehaviour
         // Unlock and show the cursor for the death screen
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        // Persist this run's behavior data for post-run analysis
+        if (PlayerBehaviorLogger.Instance != null)
+            PlayerBehaviorLogger.Instance.FinalizeAndExport();
+    }
+
+    public void PlayerEscaped(float timeSurvived) // Player reached the safe zone and won the run
+    {
+        Debug.Log("Player escaped after surviving for " + timeSurvived + " seconds.");
+
+        if (objectiveText != null) objectiveText.text = "You escaped!";
+        if (timeText != null) timeText.text = "Time Survived: " + timeSurvived.ToString("F2") + " seconds";
+        if (reasonText != null) reasonText.text = "You reached the safe zone.";
+        if (winUI != null) winUI.SetActive(true);
+
+        // Unlock and show the cursor for the win screen
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        // Stop the player moving behind the end screen
+        Player player = FindAnyObjectByType<Player>();
+        if (player != null) player.EndRun();
+
+        // Persist this run's behavior data for post-run analysis
+        if (PlayerBehaviorLogger.Instance != null)
+        {
+            PlayerBehaviorLogger.Instance.RecordEscape(timeSurvived);
+            PlayerBehaviorLogger.Instance.FinalizeAndExport();
+        }
     }
 }

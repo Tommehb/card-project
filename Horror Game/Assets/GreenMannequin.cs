@@ -14,10 +14,25 @@ public class GreenMannequin : MonoBehaviour
     private float stareTimer = 0f; // Timer to track how long the player has been staring
     private bool isChasing = false; // Flag to indicate if the mannequin is currently chasing the player
 
+    public float revealDistance = 8f; // Within this distance the mannequin reveals itself (the surprise)
+    private Renderer[] renderers; // Cached renderers used to hide/reveal the mannequin
+    private bool revealed = true; // Whether the mannequin is currently visible
+
     public bool IsLookingAtMannequin()
     {
+        if (playerCamera == null) return false;
         Vector3 screenPoint = playerCamera.WorldToViewportPoint(transform.position);
-        return screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1;
+        return screenPoint.z > 0 && screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1;
+    }
+
+    // Hide or reveal the mannequin's visuals (the "disguise until close" behavior)
+    void SetRevealed(bool show)
+    {
+        if (revealed == show) return;
+        revealed = show;
+        if (renderers != null)
+            foreach (Renderer r in renderers)
+                if (r != null) r.enabled = show;
     }
 
     private void MoveTowardsPlayer()
@@ -47,11 +62,33 @@ public class GreenMannequin : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get the Rigidbody component
+
+        // Resolve the player + camera at runtime (prefab refs can't point at a scene object)
+        if (player == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) player = p.transform;
+        }
+        if (playerCamera == null) playerCamera = Camera.main;
+
+        renderers = GetComponentsInChildren<Renderer>(true); // Cache for hide/reveal
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (player == null) return;
+
+        // Stay hidden/disguised until the player comes close, then reveal (the surprise)
+        bool close = Vector3.Distance(transform.position, player.position) <= revealDistance;
+        SetRevealed(close);
+        if (!close)
+        {
+            stareTimer = 0f;
+            isChasing = false;
+            return;
+        }
+
         if (IsLookingAtMannequin())
         {
             // If the player is looking at the mannequin, increase the stare timer

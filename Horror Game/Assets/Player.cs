@@ -157,9 +157,20 @@ public class Player : NetworkBehaviour
 
         // emit death event
         float timeSurvived = Time.time - gameHandler.startTime; // Calculate time survived
+
+        // Record the death location + cause for post-run behavior data
+        if (PlayerBehaviorLogger.Instance != null)
+            PlayerBehaviorLogger.Instance.RecordDeath(transform.position, reason, timeSurvived);
+
         gameHandler.PlayerDied(timeSurvived, reason); // Notify GameManager of player death
 
         isAlive = false; // Mark player as dead
+    }
+
+    // Ends the run without a jumpscare (used when the player escapes / wins).
+    public void EndRun()
+    {
+        isAlive = false;
     }
 
     private bool HasLocalControl()
