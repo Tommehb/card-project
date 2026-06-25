@@ -21,6 +21,17 @@ public class RedMannequin : MonoBehaviour
     bool InSession => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
     bool HasAuthority => !InSession || NetworkManager.Singleton.IsServer; // run AI in single-player or on the server
 
+    private bool motionDisabled;
+    // On non-authoritative clients, stop the NavMeshAgent/Rigidbody so they don't fight NetworkTransform.
+    void DisableLocalMotion()
+    {
+        if (motionDisabled) return;
+        motionDisabled = true;
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null) agent.enabled = false;
+        if (rb != null) rb.isKinematic = true;
+    }
+
     // In a co-op session, target the nearest non-downed player (evaluated on the server).
     Transform GetNearestLivePlayer()
     {
@@ -55,7 +66,7 @@ public class RedMannequin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!HasAuthority) return; // clients receive the mannequin's position via NetworkTransform
+        if (!HasAuthority) { DisableLocalMotion(); return; } // clients receive position via NetworkTransform
         if (InSession)
         {
             Transform target = GetNearestLivePlayer();

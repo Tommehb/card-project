@@ -23,6 +23,17 @@ public class GreenMannequin : MonoBehaviour
     bool InSession => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
     bool HasAuthority => !InSession || NetworkManager.Singleton.IsServer; // run AI in single-player or on the server
 
+    private bool motionDisabled;
+    // On non-authoritative clients, stop the NavMeshAgent/Rigidbody so they don't fight NetworkTransform.
+    void DisableLocalMotion()
+    {
+        if (motionDisabled) return;
+        motionDisabled = true;
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null) agent.enabled = false;
+        if (rb != null) rb.isKinematic = true;
+    }
+
     private Transform[] cachedPlayers;
     private float playerCacheTimer;
 
@@ -155,7 +166,7 @@ public class GreenMannequin : MonoBehaviour
             || IsAnyPlayerWithin(revealDistance);
         SetRevealed(anyoneClose);
 
-        if (!HasAuthority) return; // AI is server-authoritative (single-player runs it locally)
+        if (!HasAuthority) { DisableLocalMotion(); return; } // AI is server-authoritative (single-player runs it locally)
 
         if (InSession)
         {
