@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 // near invisible, will not move unless the player stares for too long at it
 
@@ -17,6 +18,74 @@ public class GreenMannequin : MonoBehaviour
     public float revealDistance = 8f; // Within this distance the mannequin reveals itself (the surprise)
     private Renderer[] renderers; // Cached renderers used to hide/reveal the mannequin
     private bool revealed = true; // Whether the mannequin is currently visible
+
+    // --- Multiplayer authority helpers ---
+    bool InSession => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+    bool HasAuthority => !InSession || NetworkManager.Singleton.IsServer; // run AI in single-player or on the server
+
+    private Transform[] cachedPlayers;
+    private float playerCacheTimer;
+
+    void RefreshPlayers()
+    {
+        Player[] ps = FindObjectsByType<Player>(FindObjectsInactive.Exclude);
+        cachedPlayers = new Transform[ps.Length];
+        for (int i = 0; i < ps.Length; i++) cachedPlayers[i] = ps[i].transform;
+    }
+
+    // Reveal visual is evaluated on EVERY client (positions are NetworkTransform-synced) so
+    // all players see the same hidden -> revealed state.
+    bool IsAnyPlayerWithin(float dist)
+    {
+        if (cachedPlayers == null) return false;
+        float d2 = dist * dist;
+        foreach (Transform t in cachedPlayers)
+        {
+            if (t == null) continue;
+            if ((t.position - transform.position).sqrMagnitude <= d2) return true;
+        }
+        return false;
+    }
+
+    Transform GetNearestLivePlayer()
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return null;
+        Transform nearest = null; float best = float.MaxValue;
+        foreach (NetworkClient client in nm.ConnectedClientsList)
+        {
+            if (CoopGameManager.Instance != null && CoopGameManager.Instance.IsClientDowned(client.ClientId)) continue;
+            NetworkObject po = client.PlayerObject;
+            if (po == null) continue;
+            float d = Vector3.Distance(transform.position, po.transform.position);
+            if (d < best) { best = d; nearest = po.transform; }
+        }
+        return nearest;
+    }
+
+    // Server-side proxy for "is this player looking at me" (the server has no client camera).
+    bool IsLookedAtBy(Transform p)
+    {
+        if (p == null) return false;
+        Vector3 to = transform.position - p.position; to.y = 0f;
+        if (to.sqrMagnitude < 0.0001f) return true;
+        return Vector3.Dot(p.forward, to.normalized) > 0.5f;
+    }
+
+    bool IsWatchedByAnyone()
+    {
+        if (!InSession) return IsLookingAtMannequin(); // single-player: accurate camera viewport check
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return false;
+        foreach (NetworkClient client in nm.ConnectedClientsList)
+        {
+            if (CoopGameManager.Instance != null && CoopGameManager.Instance.IsClientDowned(client.ClientId)) continue;
+            NetworkObject po = client.PlayerObject;
+            if (po == null) continue;
+            if (IsLookedAtBy(po.transform)) return true;
+        }
+        return false;
+    }
 
     public bool IsLookingAtMannequin()
     {
@@ -77,24 +146,35 @@ public class GreenMannequin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Refresh the local player list occasionally (works on server, clients, and single-player).
+        playerCacheTimer -= Time.deltaTime;
+        if (cachedPlayers == null || playerCacheTimer <= 0f) { RefreshPlayers(); playerCacheTimer = 0.5f; }
+
+        // Hide/reveal is evaluated on EVERY client so all players see the surprise consistently.
+        bool anyoneClose = (player != null && Vector3.Distance(transform.position, player.position) <= revealDistance)
+            || IsAnyPlayerWithin(revealDistance);
+        SetRevealed(anyoneClose);
+
+        if (!HasAuthority) return; // AI is server-authoritative (single-player runs it locally)
+
+        if (InSession)
+        {
+            Transform target = GetNearestLivePlayer();
+            if (target != null) player = target;
+        }
         if (player == null) return;
 
-        // Stay hidden/disguised until the player comes close, then reveal (the surprise)
-        bool close = Vector3.Distance(transform.position, player.position) <= revealDistance;
-        SetRevealed(close);
-        if (!close)
+        if (!anyoneClose)
         {
             stareTimer = 0f;
             isChasing = false;
             return;
         }
 
-        if (IsLookingAtMannequin())
+        // Stare at it long enough (any player) and it starts chasing.
+        if (IsWatchedByAnyone())
         {
-            // If the player is looking at the mannequin, increase the stare timer
             stareTimer += Time.deltaTime;
-
-            // If the stare timer exceeds the required time, start chasing the player
             if (stareTimer >= stareTime && !isChasing)
             {
                 isChasing = true;
@@ -103,9 +183,8 @@ public class GreenMannequin : MonoBehaviour
         }
         else
         {
-            // If the player stops looking at the mannequin, reset the stare timer
             stareTimer = 0f;
-            isChasing = false; // Stop chasing if not being looked at
+            isChasing = false;
         }
 
         // If the mannequin is currently chasing the player, move towards the player
@@ -124,17 +203,13 @@ public class GreenMannequin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!HasAuthority) return; // only the server (or single-player) resolves catches
         if (other.CompareTag("Player"))
         {
-            // Handle collision with the player
-            Debug.Log("Green Mannequin collided with the player!");
-
-            //call the Die function in Player
             Player playerScript = other.GetComponent<Player>();
-            if (playerScript != null)
-            {
-                playerScript.Die("Hide"); // Call the Die function in Player
-            }
+            if (playerScript == null) return;
+            if (InSession) playerScript.ServerKill("Hide");
+            else playerScript.Die("Hide");
         }
     }
 }

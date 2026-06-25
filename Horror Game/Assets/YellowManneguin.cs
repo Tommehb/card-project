@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 public class YellowManneguin : MonoBehaviour
 {
@@ -7,6 +8,51 @@ public class YellowManneguin : MonoBehaviour
     Rigidbody rb;
     public float speed = 2f; // Speed of the mannequin
     public Camera playerCamera; // Reference to the player's camera
+
+    // --- Multiplayer authority helpers ---
+    bool InSession => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+    bool HasAuthority => !InSession || NetworkManager.Singleton.IsServer; // run AI in single-player or on the server
+
+    Transform GetNearestLivePlayer()
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return null;
+        Transform nearest = null; float best = float.MaxValue;
+        foreach (NetworkClient client in nm.ConnectedClientsList)
+        {
+            if (CoopGameManager.Instance != null && CoopGameManager.Instance.IsClientDowned(client.ClientId)) continue;
+            NetworkObject po = client.PlayerObject;
+            if (po == null) continue;
+            float d = Vector3.Distance(transform.position, po.transform.position);
+            if (d < best) { best = d; nearest = po.transform; }
+        }
+        return nearest;
+    }
+
+    // Server-side proxy for "is this player looking at me" (the server has no client camera).
+    bool IsLookedAtBy(Transform p)
+    {
+        if (p == null) return false;
+        Vector3 to = transform.position - p.position; to.y = 0f;
+        if (to.sqrMagnitude < 0.0001f) return true;
+        return Vector3.Dot(p.forward, to.normalized) > 0.5f; // ~60-degree front cone
+    }
+
+    // A watched Weeping-Angel freezes if ANY live player is looking at it.
+    bool IsWatchedByAnyone()
+    {
+        if (!InSession) return IsLookingAtMannequin(); // single-player: accurate camera viewport check
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return false;
+        foreach (NetworkClient client in nm.ConnectedClientsList)
+        {
+            if (CoopGameManager.Instance != null && CoopGameManager.Instance.IsClientDowned(client.ClientId)) continue;
+            NetworkObject po = client.PlayerObject;
+            if (po == null) continue;
+            if (IsLookedAtBy(po.transform)) return true;
+        }
+        return false;
+    }
 
     // function to check if the player is looking at the mannequin (within the viewport)
     public bool IsLookingAtMannequin()
@@ -50,11 +96,16 @@ public class YellowManneguin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player == null || playerCamera == null) return;
-        // Debug.Log("Is looking at mannequin: " + IsLookingAtMannequin());
+        if (!HasAuthority) return; // clients receive the mannequin's position via NetworkTransform
+        if (InSession)
+        {
+            Transform target = GetNearestLivePlayer();
+            if (target != null) player = target;
+        }
+        if (player == null) return;
 
-        // If not being looked at, move towards player
-        if (!IsLookingAtMannequin())
+        // If not being looked at by anyone, move towards the nearest player
+        if (!IsWatchedByAnyone())
         {
             MoveTowardsPlayer();
             // rotate about the y axis to face the player
@@ -77,17 +128,13 @@ public class YellowManneguin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!HasAuthority) return; // only the server (or single-player) resolves catches
         if (other.CompareTag("Player"))
         {
-            // Handle collision with the player
-            Debug.Log("Yellow Mannequin collided with the player!");
-
-            //call the Die function in Player
             Player playerScript = other.GetComponent<Player>();
-            if (playerScript != null)
-            {
-                playerScript.Die("Blink"); // Call the Die function in Player
-            }
+            if (playerScript == null) return;
+            if (InSession) playerScript.ServerKill("Blink");
+            else playerScript.Die("Blink");
         }
     }
 }

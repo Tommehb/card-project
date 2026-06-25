@@ -140,8 +140,17 @@ public class Player : NetworkBehaviour
 
         if (collision.gameObject.CompareTag("Key"))
         {
-            gameHandler.KeyFound(); // Call the KeyFound method in GameHandler
-            Destroy(collision.gameObject); // Destroy the key GameObject
+            if (gameHandler != null && gameHandler.IsCoop)
+            {
+                // Co-op: ask the server to collect this key (it despawns for everyone).
+                int keyIndex = gameHandler.keys != null ? gameHandler.keys.IndexOf(collision.gameObject) : -1;
+                if (keyIndex >= 0) gameHandler.CoopRequestPickup(keyIndex);
+            }
+            else if (gameHandler != null)
+            {
+                gameHandler.KeyFound(); // Call the KeyFound method in GameHandler
+                Destroy(collision.gameObject); // Destroy the key GameObject
+            }
         }
     }
 
@@ -152,8 +161,7 @@ public class Player : NetworkBehaviour
         if (!HasLocalControl()) return;
         // Handle player death (e.g., respawn, game over, etc.)
         Debug.Log("Player has died: " + reason);
-        // You can add more logic here, such as restarting the level or showing a game over screen
-        jumpscareHandler.TriggerJumpscare(); // Trigger the jumpscare
+        jumpscareHandler.TriggerJumpscare(); // Trigger the jumpscare (on this client's own camera)
 
         // emit death event
         float timeSurvived = Time.time - gameHandler.startTime; // Calculate time survived
@@ -162,15 +170,46 @@ public class Player : NetworkBehaviour
         if (PlayerBehaviorLogger.Instance != null)
             PlayerBehaviorLogger.Instance.RecordDeath(transform.position, reason, timeSurvived);
 
-        gameHandler.PlayerDied(timeSurvived, reason); // Notify GameManager of player death
+        if (gameHandler.IsCoop)
+        {
+            // Co-op: this player is downed and becomes a spectator. The team only loses
+            // once everyone is down (decided server-side).
+            gameHandler.CoopReportDeath();
+        }
+        else
+        {
+            gameHandler.PlayerDied(timeSurvived, reason); // Single-player game-over
+        }
 
-        isAlive = false; // Mark player as dead
+        isAlive = false; // Mark dead: stops movement/look; camera stays on for spectating
     }
 
     // Ends the run without a jumpscare (used when the player escapes / wins).
     public void EndRun()
     {
         isAlive = false;
+    }
+
+    // True if this client owns/controls this player (used by co-op triggers).
+    public bool IsLocalControlled => HasLocalControl();
+
+    // Server-authoritative kill: the server (e.g. a mannequin catch) tells the owning
+    // client to run its normal death (jumpscare on its own camera + co-op spectator).
+    public void ServerKill(string reason)
+    {
+        if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsServer) return;
+        var sendParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } }
+        };
+        KillClientRpc(reason, sendParams);
+    }
+
+    [ClientRpc]
+    private void KillClientRpc(string reason, ClientRpcParams clientRpcParams = default)
+    {
+        if (!IsOwner) return;
+        Die(reason);
     }
 
     private bool HasLocalControl()

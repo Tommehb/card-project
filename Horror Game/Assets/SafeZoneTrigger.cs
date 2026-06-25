@@ -28,6 +28,17 @@ public class SafeZoneTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         if (gameHandler == null) return;
+
+        if (gameHandler.IsCoop)
+        {
+            // Only the owning client requests; the server validates and ends the run for everyone.
+            Player player = other.GetComponent<Player>();
+            if (player == null || !player.IsLocalControlled) return;
+            if (!gameHandler.CoopAllKeysFound) return;
+            gameHandler.CoopRequestEscape();
+            return;
+        }
+
         if (gameHandler.keysFound < gameHandler.totalKeys) return; // not unlocked yet
 
         float timeSurvived = Time.time - gameHandler.startTime;

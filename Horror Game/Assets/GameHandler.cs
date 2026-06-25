@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 public class GameHandler : MonoBehaviour
 {
     public TextMeshProUGUI objectiveText; // Reference to the TextMeshProUGUI component
@@ -24,6 +25,23 @@ public class GameHandler : MonoBehaviour
     // start time
     public float startTime;
 
+    private CoopGameManager coop; // present only when the LAN co-op layer is wired in
+    private bool[] keyCollected;  // replicated key-collection tracking (co-op)
+
+    // True while a server-authoritative LAN co-op game is running.
+    public bool IsCoop => coop != null && coop.IsActive;
+    public int KeyCount => keys != null ? keys.Count : 0;
+    public int SpawnPointCount => spawnPoints != null ? spawnPoints.Count : 0;
+    public bool CoopAllKeysFound => coop != null && coop.AllKeysFound;
+    public void CoopRequestPickup(int keyIndex) { if (coop != null) coop.RequestPickupServerRpc(keyIndex); }
+    public void CoopRequestEscape() { if (coop != null) coop.RequestEscapeServerRpc(); }
+    public void CoopReportDeath() { if (coop != null) coop.ReportDeathServerRpc(); }
+
+    void Awake()
+    {
+        coop = GetComponent<CoopGameManager>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -34,6 +52,22 @@ public class GameHandler : MonoBehaviour
         Cursor.visible = false;
 
         startTime = Time.time; // Record the start time
+
+        // In a LAN session the server-authoritative CoopGameManager drives setup (key
+        // placement, objective, safe zone) via OnNetworkSpawn. Outside a session, run the
+        // original single-player setup below.
+        bool inNetworkSession = NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+        if (inNetworkSession && coop != null)
+        {
+            return;
+        }
+
+        SinglePlayerSetup();
+    }
+
+    // Original single-player key spawning + mannequin setup.
+    void SinglePlayerSetup()
+    {
         if (GameManager.instance != null) {
             switch (GameManager.instance.level)
             {
@@ -108,11 +142,112 @@ public class GameHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (IsCoop) return; // objective UI is driven by CoopGameManager replication
+
         objectiveText.text = "Objective: Find all keys (" + keysFound + "/" + totalKeys + ")"; // Update the objective text
         if (keysFound >= totalKeys) // Check if all keys have been found
         {
             objectiveText.text = "Objective: Go to the safe zone!"; // Update the objective text
         }
+    }
+
+    // ---- Co-op (LAN) hooks called by CoopGameManager ----
+
+    // Per-client scene setup at network spawn: enable mannequins locally and reset key tracking.
+    public void CoopClientSetup()
+    {
+        keyCollected = new bool[KeyCount];
+        // In co-op every placed mannequin stays active; its AI is server-authoritative
+        // (see the mannequin scripts) and its position syncs to clients via NetworkTransform.
+    }
+
+    // Place keys deterministically on every client using the server-chosen spawn indices.
+    public void PlaceCoopKeys(int[] spawnIndices)
+    {
+        if (keys == null) return;
+        if (keyCollected == null || keyCollected.Length != keys.Count) keyCollected = new bool[keys.Count];
+
+        for (int i = 0; i < keys.Count; i++)
+            if (keys[i] != null) keys[i].SetActive(false);
+
+        for (int i = 0; i < spawnIndices.Length && i < keys.Count; i++)
+        {
+            GameObject key = keys[i];
+            if (key == null) continue;
+            key.SetActive(true);
+
+            int sp = SpawnPointCount > 0 ? Mathf.Clamp(spawnIndices[i], 0, SpawnPointCount - 1) : -1;
+            if (sp >= 0) key.transform.position = spawnPoints[sp].position;
+
+            Rigidbody rb = key.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true; // deterministic: no physics throw to desync across clients
+            }
+        }
+    }
+
+    public bool IsKeyCollected(int index) =>
+        keyCollected != null && index >= 0 && index < keyCollected.Length && keyCollected[index];
+
+    public void MarkKeyCollectedServer(int index)
+    {
+        if (keyCollected != null && index >= 0 && index < keyCollected.Length) keyCollected[index] = true;
+    }
+
+    public void DeactivateKey(int index)
+    {
+        if (keyCollected != null && index >= 0 && index < keyCollected.Length) keyCollected[index] = true;
+        if (keys != null && index >= 0 && index < keys.Count && keys[index] != null) keys[index].SetActive(false);
+    }
+
+    public void SetSafeZoneEnabled(bool enabled)
+    {
+        if (safeZone != null) safeZone.enabled = enabled;
+    }
+
+    public void OnCoopObjectiveChanged(int found, int total)
+    {
+        keysFound = found;
+        totalKeys = total;
+        if (objectiveText == null) return;
+        objectiveText.text = (total > 0 && found >= total)
+            ? "Objective: Go to the safe zone!"
+            : "Objective: Find all keys (" + found + "/" + total + ")";
+    }
+
+    // Broadcast to all clients when a survivor escapes (team win).
+    public void OnCoopWon()
+    {
+        if (objectiveText != null) objectiveText.text = "Your team escaped!";
+        if (reasonText != null) reasonText.text = "You reached the safe zone.";
+        if (timeText != null) timeText.text = "Time Survived: " + (Time.time - startTime).ToString("F2") + " seconds";
+        if (winUI != null) winUI.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (PlayerBehaviorLogger.Instance != null)
+        {
+            PlayerBehaviorLogger.Instance.RecordEscape(Time.time - startTime);
+            PlayerBehaviorLogger.Instance.FinalizeAndExport();
+        }
+    }
+
+    // Broadcast to all clients when every player is down (team loss).
+    public void OnCoopLost()
+    {
+        if (objectiveText != null) objectiveText.text = "Your team was caught.";
+        if (reasonText != null) reasonText.text = "Everyone was caught by the mannequins.";
+        if (winUI != null) winUI.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (PlayerBehaviorLogger.Instance != null)
+            PlayerBehaviorLogger.Instance.FinalizeAndExport();
     }
 
     public void KeyFound() // Method to call when a key is found

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 
 /*
     The Red Mannequin chases the player if they are within a certain distance.
@@ -15,6 +16,28 @@ public class RedMannequin : MonoBehaviour
     public float wanderDistance = 5f; // Distance for random wandering
 
     Rigidbody rb; // Reference to the Rigidbody component
+
+    // --- Multiplayer authority helpers ---
+    bool InSession => NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening;
+    bool HasAuthority => !InSession || NetworkManager.Singleton.IsServer; // run AI in single-player or on the server
+
+    // In a co-op session, target the nearest non-downed player (evaluated on the server).
+    Transform GetNearestLivePlayer()
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return null;
+        Transform nearest = null;
+        float best = float.MaxValue;
+        foreach (NetworkClient client in nm.ConnectedClientsList)
+        {
+            if (CoopGameManager.Instance != null && CoopGameManager.Instance.IsClientDowned(client.ClientId)) continue;
+            NetworkObject po = client.PlayerObject;
+            if (po == null) continue;
+            float d = Vector3.Distance(transform.position, po.transform.position);
+            if (d < best) { best = d; nearest = po.transform; }
+        }
+        return nearest;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,6 +55,12 @@ public class RedMannequin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!HasAuthority) return; // clients receive the mannequin's position via NetworkTransform
+        if (InSession)
+        {
+            Transform target = GetNearestLivePlayer();
+            if (target != null) player = target;
+        }
         if (player == null) return;
         // Call the function to update the mannequin's behavior
         UpdateBehavior();
@@ -129,17 +158,13 @@ public class RedMannequin : MonoBehaviour
     // Function to handle collision with the player
     private void OnTriggerEnter(Collider other)
     {
+        if (!HasAuthority) return; // only the server (or single-player) resolves catches
         if (other.CompareTag("Player"))
         {
-            // Handle collision with the player
-            Debug.Log("Red Mannequin collided with the player!");
-
-            //call the Die function in Player
             Player playerScript = other.GetComponent<Player>();
-            if (playerScript != null)
-            {
-                playerScript.Die("Chase"); // Call the Die function in Player
-            }
+            if (playerScript == null) return;
+            if (InSession) playerScript.ServerKill("Chase"); // server tells that player's client to die
+            else playerScript.Die("Chase");
         }
     }
 }
