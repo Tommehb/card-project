@@ -2246,6 +2246,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2714060270
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 36.7
@@ -3934,6 +3946,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2929268939
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -50.72
@@ -4952,6 +4976,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2111487122
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5494,6 +5530,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: chase_mannequin (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2933021478
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
+      objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
       value: 
@@ -5787,6 +5835,18 @@ PrefabInstance:
     - target: {fileID: 667785898598492672, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: m_Name
       value: chase_mannequin (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2483048054
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
       objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
@@ -6795,6 +6855,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2957200764
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 60.3
@@ -8454,6 +8526,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4206600942
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9435,6 +9519,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3574632573
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -54.6
@@ -10123,6 +10219,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: chase_mannequin (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 383203944
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
+      objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
       value: 
@@ -10319,6 +10427,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 109260046
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10801,6 +10921,18 @@ PrefabInstance:
     - target: {fileID: 667785898598492672, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: m_Name
       value: chase_mannequin (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1216135212
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
       objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
@@ -12496,6 +12628,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2582333570
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13079,6 +13223,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4163474384
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14056,6 +14212,18 @@ PrefabInstance:
     - target: {fileID: 667785898598492672, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: m_Name
       value: chase_mannequin (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1529132782
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
       objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
@@ -15085,6 +15253,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1691896614
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -36.8
@@ -15233,6 +15413,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 24462778
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4775702299550859825, guid: c90384fe725ab4b78bb1eafbcc579c14, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 388435509
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15303,6 +15495,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2350310972
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1732394747258880583, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3928283150
+      objectReference: {fileID: 0}
     - target: {fileID: 4766896137352979018, guid: e573940862dcd4c71b440bb89e31666e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.4
@@ -15662,6 +15866,18 @@ PrefabInstance:
     - target: {fileID: 667785898598492672, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: m_Name
       value: chase_mannequin
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2089371020
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 981462503242067851, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3295634607
       objectReference: {fileID: 0}
     - target: {fileID: 2513390862639792937, guid: bffcf8f284e6a4e34a230fda63e126f4, type: 3}
       propertyPath: player
