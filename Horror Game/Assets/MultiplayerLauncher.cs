@@ -25,6 +25,7 @@ public class MultiplayerLauncher : MonoBehaviour
     private UnityTransport transport;
     private NetworkManager nm;
     private LanSessionManager session;
+    private string lastPublishedStatus;
 
     // Wait a frame so NetworkManager.Awake() runs and sets Singleton.
     private IEnumerator Start()
@@ -61,7 +62,7 @@ public class MultiplayerLauncher : MonoBehaviour
 
     public void Host()
     {
-        if (!Ready()) return;
+        if (!Ready("host")) return;
         ReadInputs();
 
         if (session != null)
@@ -89,7 +90,7 @@ public class MultiplayerLauncher : MonoBehaviour
 
     public void ServerOnly()
     {
-        if (!Ready()) return;
+        if (!Ready("start server")) return;
         ReadInputs();
 
         if (session != null)
@@ -110,7 +111,7 @@ public class MultiplayerLauncher : MonoBehaviour
 
     public void Join()
     {
-        if (!Ready()) return;
+        if (!Ready("join")) return;
         ReadInputs();
 
         if (session != null)
@@ -176,11 +177,39 @@ public class MultiplayerLauncher : MonoBehaviour
 
     private void UpdateStatus(string message)
     {
+        var normalizedMessage = string.IsNullOrWhiteSpace(message) ? "Offline" : message;
+        if (normalizedMessage != lastPublishedStatus)
+        {
+            lastPublishedStatus = normalizedMessage;
+            Debug.Log($"LAN: {normalizedMessage}");
+        }
+
         if (statusText != null)
         {
-            statusText.text = string.IsNullOrWhiteSpace(message) ? "Offline" : message;
+            statusText.text = normalizedMessage;
         }
     }
 
-    bool Ready() => nm != null && transport != null && !nm.IsListening;
+    private bool Ready(string action)
+    {
+        if (nm == null)
+        {
+            UpdateStatus($"Cannot {action}: no NetworkManager found.");
+            return false;
+        }
+
+        if (transport == null)
+        {
+            UpdateStatus($"Cannot {action}: NetworkManager is missing UnityTransport.");
+            return false;
+        }
+
+        if (nm.IsListening)
+        {
+            UpdateStatus($"Cannot {action}: a LAN session is already running.");
+            return false;
+        }
+
+        return true;
+    }
 }
