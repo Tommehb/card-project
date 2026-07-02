@@ -146,6 +146,33 @@ public class LanSessionManager : MonoBehaviour
         return true;
     }
 
+    public bool StartHostGameplaySession(string address, ushort port)
+    {
+        if (!CanStartSession())
+        {
+            return false;
+        }
+
+        currentAddress = string.IsNullOrWhiteSpace(address) ? defaultAddress : address.Trim();
+        currentPort = port;
+        ConfigureHostTransport(port);
+
+        if (!networkManager.StartHost())
+        {
+            SetStatus("Failed to start LAN host.");
+            return false;
+        }
+
+        SetStatus($"Hosting LAN co-op on UDP {port}. Loading {gameplaySceneName}...");
+
+        if (!string.IsNullOrWhiteSpace(gameplaySceneName) && UnitySceneManager.GetActiveScene().name != gameplaySceneName)
+        {
+            LoadNetworkScene(gameplaySceneName);
+        }
+
+        return true;
+    }
+
     public bool StartClientSession(string address, ushort port)
     {
         if (!CanStartSession())

@@ -338,6 +338,9 @@ public class GameHandler : MonoBehaviour
         if (FindAnyObjectByType<PlayerBehaviorLogger>() == null)
             gameObject.AddComponent<PlayerBehaviorLogger>();
 
+        if (GetComponent<GamePauseMenu>() == null)
+            gameObject.AddComponent<GamePauseMenu>();
+
         // Safe-zone escape/win trigger on the existing SafeZone object
         if (safeZone != null && safeZone.GetComponent<SafeZoneTrigger>() == null)
         {

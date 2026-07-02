@@ -73,7 +73,7 @@ public class Player : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!HasLocalControl() || !isAlive)
+        if (!HasLocalControl() || !isAlive || GamePauseMenu.IsPauseOpen)
         {
             return;
         }

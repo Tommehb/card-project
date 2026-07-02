@@ -678,7 +678,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2146659761}
         m_TargetAssemblyTypeName: MultiplayerLauncher, Assembly-CSharp
         m_MethodName: Join
         m_Mode: 1
@@ -6466,7 +6466,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2146659761}
         m_TargetAssemblyTypeName: MultiplayerLauncher, Assembly-CSharp
         m_MethodName: Host
         m_Mode: 1
@@ -7885,9 +7885,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1982216308}
-        m_TargetAssemblyTypeName: TitleScreen, Assembly-CSharp
-        m_MethodName: StartMultiplayer
+      - m_Target: {fileID: 2146659761}
+        m_TargetAssemblyTypeName: MultiplayerLauncher, Assembly-CSharp
+        m_MethodName: Host
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8137,8 +8137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3b89efe7d6943b7a9610e620cfa517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ipAddressInput: {fileID: 0}
-  portInput: {fileID: 0}
+  ipAddressInput: {fileID: 1589733136}
+  portInput: {fileID: 406284730}
   playerNameInput: {fileID: 0}
   statusText: {fileID: 0}
   ipAddress: 127.0.0.1

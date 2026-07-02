@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // Import the SceneManagement namespace
-using UnityEngine.UI; // Import the UI namespace
 
 public class TitleScreen : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        GamePauseMenu.ResetGlobalState();
     }
 
     // Update is called once per frame
@@ -31,8 +33,14 @@ public class TitleScreen : MonoBehaviour
 
     public void StartMultiplayer()
     {
-        // Load the multiplayer scene
-        SceneManager.LoadScene("MultiplayTest");
+        var launcher = FindAnyObjectByType<MultiplayerLauncher>();
+        if (launcher != null)
+        {
+            launcher.Host();
+            return;
+        }
+
+        Debug.LogError("No MultiplayerLauncher found on the title screen.");
     }
 
 }

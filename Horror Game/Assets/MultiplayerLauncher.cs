@@ -33,7 +33,7 @@ public class MultiplayerLauncher : MonoBehaviour
         // give it time to initialize.
         yield return null;
 
-        nm = NetworkManager.Singleton ?? FindFirstObjectByType<NetworkManager>();
+        nm = NetworkManager.Singleton ?? FindAnyObjectByType<NetworkManager>();
         if (nm == null)
         {
             Debug.LogError("No NetworkManager in scene. Add one or use a bootstrap (see below).");
@@ -68,7 +68,7 @@ public class MultiplayerLauncher : MonoBehaviour
         {
             session.ConfigureSceneFlow(menuSceneName, lobbySceneName, gameplaySceneName);
             session.SetLocalPlayerName(ReadPlayerName());
-            var started = session.StartHostSession(ipAddress, port);
+            var started = session.StartHostGameplaySession(ipAddress, port);
             UpdateStatus(session.StatusMessage);
             if (!started)
             {
@@ -80,7 +80,11 @@ public class MultiplayerLauncher : MonoBehaviour
         // Bind to all interfaces so other machines can join (overrides inspector Address).
         transport.SetConnectionData("0.0.0.0", port);
         if (!nm.StartHost()) Debug.LogError("Failed to start host.");
-        else Debug.Log($"Hosting on UDP {port}");
+        else
+        {
+            Debug.Log($"Hosting on UDP {port}");
+            nm.SceneManager.LoadScene(gameplaySceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
     }
 
     public void ServerOnly()
